@@ -1,13 +1,29 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { useLoaderData, useParams } from "react-router";
+import { BookContext } from "../../context/BookContext";
 
 const BookDetails = () => {
   const { id } = useParams();
 
   const books = useLoaderData();
 
+  const bookContext = useContext(BookContext)
+
   const expectedBook = books.find((bk) => bk.bookId == id);
 
+  const [storedBooks, setStoredBooks] = useState([]);
+
+  const handleReadBook = (currentBook) => {
+    const isExistBook = storedBooks.find(
+      (book) => book.bookId == currentBook.bookId
+    );
+    if (isExistBook) {
+      alert("already added");
+    } else {
+      setStoredBooks([...storedBooks, currentBook]);
+    }
+    console.log(currentBook, storedBooks);
+  };
   return (
     <div className="hero bg-base-200 min-h-screen">
       <div className="hero-content flex-col gap-10 lg:flex-row">
@@ -54,8 +70,13 @@ const BookDetails = () => {
             </div>
           </div>
           <div>
-            <button className="btn btn-info btn-outline mr-3">Read</button>
-            <button className="btn btn-accent">Wishlist</button>
+            <button
+              onClick={() => handleReadBook(expectedBook)}
+              className="btn btn-info btn-outline mr-3"
+            >
+              Mark as Read
+            </button>
+            <button className="btn btn-accent">Add to Wishlist</button>
           </div>
         </div>
       </div>
